@@ -9,7 +9,7 @@
 	</parent>
 
 	<packaging>jar</packaging>
-	<artifactId>service-test1</artifactId>
+	<artifactId>service-test2</artifactId>
 
 	<dependencies>
 
