@@ -14,7 +14,7 @@
 			</encoder>
 		</appender>
 
-		<logger name="com.jzc.spring.boot" level="debug"/>
+		<logger name="com.bus.gateway" level="debug"/>
 
 		<root level="info">
 			<appender-ref ref="CONSOLE" />

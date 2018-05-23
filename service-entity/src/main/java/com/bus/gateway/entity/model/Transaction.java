@@ -1,4 +1,4 @@
-package com.bus.gateway.entity.resend;
+package com.bus.gateway.entity.model;
 
 import java.util.Date;
 

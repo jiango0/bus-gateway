@@ -1,7 +1,7 @@
 package com.bus.gateway.test2.resend.dao.mongo;
 
 import com.bus.gateway.common.dao.mongo.AbstractBaseMongoDao;
-import com.bus.gateway.entity.resend.RabbitMQMessageConsumer;
+import com.bus.gateway.entity.model.RabbitMQMessageConsumer;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bus.gateway.entity.mapper.MessageConsumerMapper" >
+
+  <sql id="Base_Column_List" >
+    id, provider_id, exchange_type, exchange, queue, routingkey, create_date, last_date, 
+    use_status,content
+  </sql>
+
+  <select id="selectById" resultType="com.bus.gateway.entity.model.MessageConsumer" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from message_consumer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByProviderId" parameterType="java.lang.String" resultType="com.bus.gateway.entity.model.MessageConsumer">
+    select
+    <include refid="Base_Column_List" />
+    from message_consumer
+    where provider_id = #{providerId,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.bus.gateway.entity.model.MessageConsumer" >
+    insert into message_consumer (provider_id, exchange_type,
+      exchange, queue, routingkey,
+      create_date, last_date, use_status,
+      content)
+    values (#{providerId,jdbcType=VARCHAR}, #{exchangeType,jdbcType=VARCHAR},
+      #{exchange,jdbcType=VARCHAR}, #{queue,jdbcType=VARCHAR}, #{routingkey,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP}, #{lastDate,jdbcType=TIMESTAMP}, #{useStatus,jdbcType=INTEGER},
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <update id="update" parameterType="com.bus.gateway.entity.model.MessageConsumer" >
+    update message_consumer
+    set provider_id = #{providerId,jdbcType=BIGINT},
+      exchange_type = #{exchangeType,jdbcType=VARCHAR},
+      exchange = #{exchange,jdbcType=VARCHAR},
+      queue = #{queue,jdbcType=VARCHAR},
+      routingkey = #{routingkey,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_date = #{lastDate,jdbcType=TIMESTAMP},
+      use_status = #{useStatus,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

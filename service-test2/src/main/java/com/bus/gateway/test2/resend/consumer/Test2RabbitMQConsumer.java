@@ -2,9 +2,9 @@ package com.bus.gateway.test2.resend.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.bus.gateway.entity.resend.RabbitMQMessageConsumer;
-import com.bus.gateway.entity.resend.RabbitMQMessageDetail;
-import com.bus.gateway.entity.resend.Transaction;
+import com.bus.gateway.entity.model.RabbitMQMessageConsumer;
+import com.bus.gateway.entity.model.RabbitMQMessageDetail;
+import com.bus.gateway.entity.model.Transaction;
 import com.bus.gateway.test2.resend.dao.mongo.Test2MessageConsumerDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
