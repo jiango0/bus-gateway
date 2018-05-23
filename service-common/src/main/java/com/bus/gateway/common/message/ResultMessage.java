@@ -10,8 +10,8 @@ public class ResultMessage<T> {
 
     private T data;
 
-    public static ResultMessage returnStatus(boolean status) {
-        return new ResultMessage(status, null, null, null);
+    public static ResultMessage error(String code, String msg) {
+        return new ResultMessage(false, code, msg, null);
     }
 
     public ResultMessage() {}

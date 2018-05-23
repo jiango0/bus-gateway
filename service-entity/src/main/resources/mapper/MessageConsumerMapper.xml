@@ -34,15 +34,35 @@
 
   <update id="update" parameterType="com.bus.gateway.entity.model.MessageConsumer" >
     update message_consumer
-    set provider_id = #{providerId,jdbcType=BIGINT},
-      exchange_type = #{exchangeType,jdbcType=VARCHAR},
-      exchange = #{exchange,jdbcType=VARCHAR},
-      queue = #{queue,jdbcType=VARCHAR},
-      routingkey = #{routingkey,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      last_date = #{lastDate,jdbcType=TIMESTAMP},
-      use_status = #{useStatus,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
+    <set>
+      <if test="providerId != null" >
+        provider_id = #{providerId,jdbcType=BIGINT},
+      </if>
+      <if test="exchangeType != null" >
+        exchange_type = #{exchangeType,jdbcType=VARCHAR},
+      </if>
+      <if test="exchange != null" >
+        exchange = #{exchange,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null" >
+        queue = #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="routingkey != null" >
+        routingkey = #{routingkey,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastDate != null" >
+        last_date = #{lastDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useStatus != null" >
+        use_status = #{useStatus,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
 

@@ -59,4 +59,10 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <update id="updateInfoByProviderId" parameterType="com.bus.gateway.entity.model.MessageProvider">
+    update message_provider set
+    send_status = #{sendStatus,jdbcType=INTEGER}
+    where provider_id = #{providerId,jdbcType=VARCHAR}
+  </update>
+
 </mapper>

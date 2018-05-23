@@ -14,4 +14,6 @@ public interface MessageProviderMapper {
 
     int update(MessageProvider messageProvider);
 
+    int updateInfoByProviderId(MessageProvider messageProvider);
+
 }

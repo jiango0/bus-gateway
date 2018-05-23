@@ -1,5 +1,7 @@
 package com.bus.gateway.test1.resend.aspect;
 
+import com.bus.gateway.common.message.ResultMessage;
+import com.bus.gateway.entity.model.MessageConsumer;
 import com.bus.gateway.test1.resend.service.Test1ConsumerService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,7 +26,20 @@ public class ListenerAspect {
 
     @Around(value = "execute()")
     public void around(ProceedingJoinPoint joinPoint) throws Throwable {
-        joinPoint.proceed();
+        Object [] joinPointArgs = joinPoint.getArgs();
+        if(joinPointArgs == null) {
+            return;
+        }
+        Object joinPointArg = joinPointArgs[0];
+        ResultMessage<MessageConsumer> result = test1ConsumerService.receiveMessage(joinPointArg.toString());
+        if(result.isStatus()) {
+            MessageConsumer data = result.getData();
+            if(data != null && data.getId() != null) {
+                //调用listener代码块
+                joinPoint.proceed();
+                test1ConsumerService.successMessage(data.getId(), joinPointArg.toString());
+            }
+        }
     }
 
 

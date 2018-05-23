@@ -6,4 +6,6 @@ public interface TransactionService {
 
     Transaction sendTransaction(Transaction transaction);
 
+    int confirmTransaction(String providerId);
+
 }

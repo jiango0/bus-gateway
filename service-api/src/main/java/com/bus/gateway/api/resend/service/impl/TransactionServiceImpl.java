@@ -73,4 +73,13 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
+    @Transactional
+    public int confirmTransaction(String providerId) {
+        MessageProvider provider = new MessageProvider();
+        provider.setProviderId(providerId);
+        provider.setSendStatus(MessageConstant.SEND_MESSAGE_END);
+
+        return messageProviderMapper.updateInfoByProviderId(provider);
+    }
+
 }
