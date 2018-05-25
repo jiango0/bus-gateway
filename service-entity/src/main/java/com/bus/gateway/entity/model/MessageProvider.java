@@ -4,17 +4,11 @@ import java.util.Date;
 
 public class MessageProvider {
 
-    private Long id;
+    private String id;
 
-    private String providerId;
+    private Integer messageType;
 
-    private String exchangeType;
-
-    private String exchange;
-
-    private String queue;
-
-    private String routingkey;
+    private String messageParam;
 
     private Date createDate;
 
@@ -26,52 +20,28 @@ public class MessageProvider {
 
     private String content;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getProviderId() {
-        return providerId;
+    public Integer getMessageType() {
+        return messageType;
     }
 
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
+    public void setMessageType(Integer messageType) {
+        this.messageType = messageType;
     }
 
-    public String getExchangeType() {
-        return exchangeType;
+    public String getMessageParam() {
+        return messageParam;
     }
 
-    public void setExchangeType(String exchangeType) {
-        this.exchangeType = exchangeType;
-    }
-
-    public String getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    public String getQueue() {
-        return queue;
-    }
-
-    public void setQueue(String queue) {
-        this.queue = queue;
-    }
-
-    public String getRoutingkey() {
-        return routingkey;
-    }
-
-    public void setRoutingkey(String routingkey) {
-        this.routingkey = routingkey;
+    public void setMessageParam(String messageParam) {
+        this.messageParam = messageParam;
     }
 
     public Date getCreateDate() {

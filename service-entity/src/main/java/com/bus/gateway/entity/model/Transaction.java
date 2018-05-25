@@ -12,6 +12,8 @@ public class Transaction {
 
     private Date createDate;
 
+    private Boolean canSuccess;
+
     public Long getId() {
         return id;
     }
@@ -42,5 +44,13 @@ public class Transaction {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Boolean getCanSuccess() {
+        return canSuccess;
+    }
+
+    public void setCanSuccess(Boolean canSuccess) {
+        this.canSuccess = canSuccess;
     }
 }

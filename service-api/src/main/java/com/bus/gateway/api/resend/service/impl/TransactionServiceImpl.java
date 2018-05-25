@@ -1,22 +1,25 @@
 package com.bus.gateway.api.resend.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.bus.gateway.api.resend.dao.mongo.MessageProviderDao;
 import com.bus.gateway.api.resend.mq.MessageConvertSend;
 import com.bus.gateway.api.resend.service.TransactionService;
 import com.bus.gateway.common.constant.MessageConstant;
-import com.bus.gateway.entity.mapper.MessageProviderMapper;
+import com.bus.gateway.entity.model.MessageMQParam;
 import com.bus.gateway.entity.model.MessageProvider;
 import com.bus.gateway.entity.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.ExchangeTypes;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,58 +31,57 @@ public class TransactionServiceImpl implements TransactionService {
     MessageConvertSend messageConvertSend;
 
     @Autowired
-    MessageProviderMapper messageProviderMapper;
+    MessageProviderDao messageProviderDao;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @Transactional
     public Transaction sendTransaction(Transaction transaction) {
+
         //1、本地操作
         logger.info("此处为本地事务操作!");
 
-        Date now = new Date();
-        List<MessageProvider> providerList = new ArrayList<>();
+        try {
+            if(transaction.getCanSuccess() != null && !transaction.getCanSuccess()) {
+                throw new RuntimeException("canSuccess false");
+            }
 
-        //2、封装test1的消息
-        MessageProvider provider = new MessageProvider();
-        provider.setProviderId(UUID.randomUUID().toString());
-        provider.setExchangeType(ExchangeTypes.DIRECT);
-        provider.setExchange("TRANSACTION_DIRECT_EXCHANGE");
-        provider.setQueue("");
-        provider.setRoutingkey("TRANSACTION_QUEUE");
-        provider.setCreateDate(now);
-        provider.setContent(JSON.toJSONString(transaction));
-        provider.setSendStatus(MessageConstant.SEND_MESSAGE_WAIT);
-        providerList.add(provider);
-
-        //3、封装test2的消息
-        MessageProvider provider2 = new MessageProvider();
-        provider2.setProviderId(UUID.randomUUID().toString());
-        provider2.setExchangeType(ExchangeTypes.DIRECT);
-        provider2.setExchange("TRANSACTION_DIRECT_EXCHANGE2");
-        provider2.setQueue("");
-        provider2.setRoutingkey("TRANSACTION_QUEUE2");
-        provider2.setCreateDate(now);
-        provider2.setContent(JSON.toJSONString(transaction));
-        provider2.setSendStatus(MessageConstant.SEND_MESSAGE_WAIT);
-        providerList.add(provider2);
-        //保存数据
-        messageProviderMapper.insertBatch(providerList);
-
-        //4、调动外部http接口
-        logger.info("此处为调动外部http接口!");
-
-        //调起消息发送
-        messageConvertSend.send(providerList);
+            rabbitTemplate.convertAndSend("TRANSACTION_DIRECT_EXCHANGE", "TRANSACTION_QUEUE", JSON.toJSONString(transaction));
+        } catch (Exception e) {
+            logger.error("sendTransaction 失败", e);
+            MessageProvider provider = this.insertMessagePorvider(JSON.toJSONString(transaction));
+            messageConvertSend.send(provider);
+        }
 
         return transaction;
     }
 
-    @Transactional
     public int confirmTransaction(String providerId) {
-        MessageProvider provider = new MessageProvider();
-        provider.setProviderId(providerId);
-        provider.setSendStatus(MessageConstant.SEND_MESSAGE_END);
+        Update update = new Update();
+        update.set("sendStatus", MessageConstant.SEND_MESSAGE_END);
+        update.set("lastDate", new Date().getTime());
 
-        return messageProviderMapper.updateInfoByProviderId(provider);
+        return messageProviderDao.update(Query.query(Criteria.where("id").is(providerId)), update);
+    }
+
+    private MessageProvider insertMessagePorvider(String data) {
+        MessageProvider provider = new MessageProvider();
+
+        provider.setId(UUID.randomUUID().toString());
+        provider.setContent(data);
+        provider.setCreateDate(new Date());
+        provider.setMessageType(MessageConstant.TYPE_MQ);
+        provider.setSendStatus(MessageConstant.SEND_MESSAGE_RECEIVE);
+
+        MessageMQParam mq = new MessageMQParam();
+        mq.setExchange("TRANSACTION_DIRECT_EXCHANGE");
+        mq.setExchangeType(ExchangeTypes.DIRECT);
+        mq.setRoutingkey("TRANSACTION_QUEUE");
+
+        provider.setMessageParam(JSON.toJSONString(mq));
+        messageProviderDao.insert(provider);
+        return provider;
     }
 
 }

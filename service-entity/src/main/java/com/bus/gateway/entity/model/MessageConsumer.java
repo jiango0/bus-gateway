@@ -1,34 +1,32 @@
 package com.bus.gateway.entity.model;
 
-import java.util.Date;
-
 public class MessageConsumer {
 
-    private Long id;
+    private String id;
 
     private String providerId;
 
-    private String exchangeType;
+    private Integer messageType;
 
-    private String exchange;
+    private String messageParam;
 
-    private String queue;
+    private Long createDate;
 
-    private String routingkey;
-
-    private Date createDate;
-
-    private Date lastDate;
+    private Long lastDate;
 
     private Integer useStatus;
 
     private String content;
 
-    public Long getId() {
+    private Integer retryNum;
+
+    private String lastMessage;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -40,51 +38,35 @@ public class MessageConsumer {
         this.providerId = providerId;
     }
 
-    public String getExchangeType() {
-        return exchangeType;
+    public Integer getMessageType() {
+        return messageType;
     }
 
-    public void setExchangeType(String exchangeType) {
-        this.exchangeType = exchangeType;
+    public void setMessageType(Integer messageType) {
+        this.messageType = messageType;
     }
 
-    public String getExchange() {
-        return exchange;
+    public String getMessageParam() {
+        return messageParam;
     }
 
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
+    public void setMessageParam(String messageParam) {
+        this.messageParam = messageParam;
     }
 
-    public String getQueue() {
-        return queue;
-    }
-
-    public void setQueue(String queue) {
-        this.queue = queue;
-    }
-
-    public String getRoutingkey() {
-        return routingkey;
-    }
-
-    public void setRoutingkey(String routingkey) {
-        this.routingkey = routingkey;
-    }
-
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 
-    public Date getLastDate() {
+    public Long getLastDate() {
         return lastDate;
     }
 
-    public void setLastDate(Date lastDate) {
+    public void setLastDate(Long lastDate) {
         this.lastDate = lastDate;
     }
 
@@ -102,5 +84,21 @@ public class MessageConsumer {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getRetryNum() {
+        return retryNum;
+    }
+
+    public void setRetryNum(Integer retryNum) {
+        this.retryNum = retryNum;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }
