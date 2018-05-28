@@ -6,4 +6,6 @@ public interface TransRabbitMQService {
 
     Transaction sendTransaction(Transaction transaction);
 
+    Transaction fanoutSend(Transaction transaction);
+
 }

@@ -73,4 +73,15 @@ public class TransRabbitMQServiceImpl implements TransRabbitMQService {
         return transaction;
     }
 
+    public Transaction fanoutSend(Transaction transaction) {
+
+        logger.info("fanout start begin");
+
+        rabbitTemplate.convertAndSend("TRANSACTION_FANOUT_EXCHANGE", "", JSON.toJSONString(transaction));
+
+        logger.info("fanout start end");
+
+        return transaction;
+    }
+
 }

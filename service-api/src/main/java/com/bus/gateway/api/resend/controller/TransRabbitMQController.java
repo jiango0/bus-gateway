@@ -11,16 +11,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 
 @RestController
-@RequestMapping(value = "api/rabbitmq")
+@RequestMapping(value = "api")
 public class TransRabbitMQController {
 
     @Autowired
     TransRabbitMQService transRabbitMQService;
+
     @RequestMapping(value = "send")
     public ResultEntity<Transaction> send(@RequestBody Transaction transaction) {
         transaction.setId(System.currentTimeMillis());
         transaction.setCreateDate(new Date());
         return ResultEntity.returnSuccess(transRabbitMQService.sendTransaction(transaction));
+    }
+
+    @RequestMapping(value = "fanout/send")
+    public ResultEntity<Transaction> fanoutSend(@RequestBody Transaction transaction) {
+        transaction.setId(System.currentTimeMillis());
+        transaction.setCreateDate(new Date());
+        return ResultEntity.returnSuccess(transRabbitMQService.fanoutSend(transaction));
     }
 
 }
