@@ -5,6 +5,7 @@ import com.bus.gateway.api.resend.constant.MessageConstant;
 import com.bus.gateway.api.resend.dao.mongo.TransRabbitMQDao;
 import com.bus.gateway.api.resend.mq.MessageSendProvider;
 import com.bus.gateway.api.resend.service.TransRabbitMQService;
+import com.bus.gateway.entity.resend.Product;
 import com.bus.gateway.entity.resend.RabbitMQMessageDetail;
 import com.bus.gateway.entity.resend.RabbitMQMessageProvider;
 import com.bus.gateway.entity.resend.Transaction;
@@ -83,5 +84,26 @@ public class TransRabbitMQServiceImpl implements TransRabbitMQService {
 
         return transaction;
     }
+
+    public Product topicSend(Product product) {
+
+        logger.info("topic start begin");
+
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(product.getOperate());
+        stringBuffer.append(".");
+        stringBuffer.append(product.getType());
+        stringBuffer.append(".");
+        stringBuffer.append(product.getChannel());
+        String topic = stringBuffer.toString();
+
+        rabbitTemplate.convertAndSend("TRANSACTION_TOPIC_EXCHANGE", topic, JSON.toJSONString(product));
+
+        logger.info("topic start end");
+
+        return product;
+    }
+
+
 
 }

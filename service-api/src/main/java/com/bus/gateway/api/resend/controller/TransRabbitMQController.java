@@ -2,6 +2,7 @@ package com.bus.gateway.api.resend.controller;
 
 import com.bus.gateway.api.resend.service.TransRabbitMQService;
 import com.bus.gateway.common.web.ResultEntity;
+import com.bus.gateway.entity.resend.Product;
 import com.bus.gateway.entity.resend.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,13 @@ public class TransRabbitMQController {
         transaction.setId(System.currentTimeMillis());
         transaction.setCreateDate(new Date());
         return ResultEntity.returnSuccess(transRabbitMQService.fanoutSend(transaction));
+    }
+
+    @RequestMapping(value = "topic/send")
+    public ResultEntity<Product> topicSend(@RequestBody Product product) {
+        product.setId(System.currentTimeMillis());
+        product.setCreateDate(new Date());
+        return ResultEntity.returnSuccess(transRabbitMQService.topicSend(product));
     }
 
 }
