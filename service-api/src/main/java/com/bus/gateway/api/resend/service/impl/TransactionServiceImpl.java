@@ -1,6 +1,7 @@
 package com.bus.gateway.api.resend.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.bus.gateway.api.resend.event.TransactionEvent;
 import com.bus.gateway.api.resend.mq.MessageConvertSend;
 import com.bus.gateway.api.resend.service.TransactionService;
 import com.bus.gateway.common.constant.MessageConstant;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     MessageProviderMapper messageProviderMapper;
+
+    @Autowired
+    ApplicationContext applicationContext;
 
     @Transactional
     public Transaction sendTransaction(Transaction transaction) {
@@ -80,6 +85,26 @@ public class TransactionServiceImpl implements TransactionService {
         provider.setSendStatus(MessageConstant.SEND_MESSAGE_END);
 
         return messageProviderMapper.updateInfoByProviderId(provider);
+    }
+
+    @Transactional
+    public Transaction sendEventTransaction(Transaction transaction) {
+        List<MessageProvider> providerList = new ArrayList<>();
+        MessageProvider provider = new MessageProvider();
+        provider.setProviderId(UUID.randomUUID().toString());
+        provider.setExchangeType(ExchangeTypes.DIRECT);
+        provider.setExchange("Test");
+        provider.setQueue("");
+        provider.setRoutingkey("Test");
+        provider.setCreateDate(new Date());
+        provider.setContent("");
+        provider.setSendStatus(MessageConstant.SEND_MESSAGE_WAIT);
+        providerList.add(provider);
+        messageProviderMapper.insertBatch(providerList);
+
+        applicationContext.publishEvent(new TransactionEvent(this, transaction));
+
+        return transaction;
     }
 
 }

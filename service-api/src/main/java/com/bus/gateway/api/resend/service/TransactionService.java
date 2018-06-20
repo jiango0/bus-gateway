@@ -8,4 +8,6 @@ public interface TransactionService {
 
     int confirmTransaction(String providerId);
 
+    Transaction sendEventTransaction(Transaction transaction);
+
 }

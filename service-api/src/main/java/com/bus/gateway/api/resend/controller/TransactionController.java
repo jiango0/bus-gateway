@@ -30,4 +30,9 @@ public class TransactionController {
         return ResultEntity.returnSuccess(transactionService.confirmTransaction(providerId));
     }
 
+    @RequestMapping(value = "send/event")
+    public ResultEntity<Transaction> sendEventTransaction(@RequestBody Transaction transaction) {
+        return ResultEntity.returnSuccess(transactionService.sendEventTransaction(transaction));
+    }
+
 }
